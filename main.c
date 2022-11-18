@@ -119,13 +119,13 @@ int main(void)
 	  	  timer_off = 0;
 	  }
 
-	  HAL_Delay(20);
+	  HAL_Delay(50);
 
 	  if ((timer_button != 0) && (pressed == 1)) {
 	       ++starting_timer;
 	  }
 
-	  if (starting_timer >= 500) {
+	  if (starting_timer >= 200) {
 		  on_button = 0;
 	  }
 
@@ -133,7 +133,7 @@ int main(void)
 
 		  for (int time = 0; time <= (60*counter); ++time){
 			  HAL_GPIO_TogglePin(GREENY_GPIO_Port, GREENY_Pin);
-			  HAL_Delay(1000);
+			  HAL_Delay(500);
 	      }
 		  HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_SET);
 
