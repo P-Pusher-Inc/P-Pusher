@@ -137,8 +137,6 @@ int main(void)
 	      }
 		  HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_SET);
 
-
-
 		  // turn 5 volt pin on (possibly loop
 
 		  // HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_SET);
@@ -155,8 +153,10 @@ int main(void)
 
 		  HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_RESET);
 
-		  HAL_Delay(2000);
+		  // cooldown
+		  HAL_Delay(5000);
 
+		  // reset manipulators
 		  counter = 0;
 		  starting_timer = 0;
 		  on_button = 1;
