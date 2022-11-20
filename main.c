@@ -89,6 +89,14 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  uint8_t on_button = 1;
+  uint8_t timer_button = 0;
+  int counter = 0;
+  int timer_on = 0;
+  int timer_off = 0;
+  int starting_timer = 0;
+  int pressed = 0;
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -96,21 +104,72 @@ int main(void)
   while (1)
   {
 
-	  // HAL_GPIO_ReadPin(…)
-	  //bool sure;
+	  timer_button = HAL_GPIO_ReadPin(BLUEY_GPIO_Port, BLUEY_Pin);
 
-	  if (1) {
+	  if (timer_button == 0) {
+		  timer_on = 1;
+		  pressed = 1;
+	  }
 
-		  for (int time = 0; time <= 60; ++time)
-	      	  {
+	  if (timer_button != 0) {
+		  timer_off = 1;
+	  }
+
+	  if ((timer_on+timer_off) == 2) {
+	  	  ++counter;
+	      timer_on = 0;
+	  	  timer_off = 0;
+	  }
+
+	  HAL_Delay(50);
+
+	  if ((timer_button != 0) && (pressed == 1)) {
+	       ++starting_timer;
+	  }
+
+	  if (starting_timer >= 200) {
+		  on_button = 0;
+	  }
+
+	  if (on_button == 0) {
+
+		  for (int time = 0; time <= (60*counter); ++time){
 			  HAL_GPIO_TogglePin(GREENY_GPIO_Port, GREENY_Pin);
-			  HAL_Delay(1000);
-	      	  }
+			  HAL_Delay(500);
+	      }
 		  HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_SET);
+
+		  // turn 5 volt pin on (possibly loop
 
 		  HAL_Delay(5000);
 
+		  HAL_GPIO_WritePin(SUREY_GPIO_Port, SUREY_Pin, GPIO_PIN_SET);
+
+		  HAL_Delay(5000);
+
+		  HAL_GPIO_WritePin(SUREY_GPIO_Port, SUREY_Pin, GPIO_PIN_RESET);
+
+		  for (int i = 0; i < 10; ++i) {
+			  HAL_GPIO_WritePin(SUREY_GPIO_Port, SUREY_Pin, GPIO_PIN_SET);
+			  HAL_Delay(2500);
+			  HAL_GPIO_WritePin(SUREY_GPIO_Port, SUREY_Pin, GPIO_PIN_RESET);
+		  }
+
+		  // cooldown
+		  HAL_Delay(5000);
+
 		  HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_RESET);
+
+		  HAL_Delay(1000);
+
+		  // reset manipulators
+		  counter = 0;
+		  starting_timer = 0;
+		  on_button = 1;
+		  timer_on = 0;
+		  timer_off = 0;
+		  pressed = 0;
+
 	  }
 
     /* USER CODE END WHILE */
@@ -218,11 +277,15 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GREENY_GPIO_Port, GREENY_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SUREY_GPIO_Port, SUREY_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : BLUEY_Pin */
+  GPIO_InitStruct.Pin = BLUEY_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(BLUEY_GPIO_Port, &GPIO_InitStruct);
+
 
   /*Configure GPIO pin : GREENY_Pin */
   GPIO_InitStruct.Pin = GREENY_Pin;
@@ -230,6 +293,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GREENY_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SUREY_Pin */
+  GPIO_InitStruct.Pin = SUREY_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SUREY_GPIO_Port, &GPIO_InitStruct);
 
 }
 
