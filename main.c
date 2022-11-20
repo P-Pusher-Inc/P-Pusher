@@ -88,6 +88,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   uint8_t on_button = 1;
   uint8_t timer_button = 0;
   int counter = 0;
@@ -95,6 +96,7 @@ int main(void)
   int timer_off = 0;
   int starting_timer = 0;
   int pressed = 0;
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -167,6 +169,7 @@ int main(void)
 		  timer_on = 0;
 		  timer_off = 0;
 		  pressed = 0;
+
 	  }
 
     /* USER CODE END WHILE */
@@ -282,6 +285,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(BLUEY_GPIO_Port, &GPIO_InitStruct);
+
 
   /*Configure GPIO pin : GREENY_Pin */
   GPIO_InitStruct.Pin = GREENY_Pin;
