@@ -131,7 +131,7 @@ int main(void)
 
 	  if (on_button == 0) {
 
-		  for (int time = 0; time <= (6*counter); ++time){
+		  for (int time = 0; time <= (60*counter); ++time){
 			  HAL_GPIO_TogglePin(GREENY_GPIO_Port, GREENY_Pin);
 			  HAL_Delay(500);
 	      }
